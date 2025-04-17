@@ -1,0 +1,13 @@
+{
+    "name": "talos-hetzner-ts",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@pulumi/hcloud": "^1.22.0",
+        "@pulumi/pulumi": "^3.113.0",
+        "@pulumiverse/talos": "^0.5.2"
+    }
+}
