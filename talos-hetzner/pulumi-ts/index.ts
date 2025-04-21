@@ -63,12 +63,18 @@ const bootstrap = new talos.machine.Bootstrap("bootstrap", {
 }, {
     dependsOn: [configApplyControlPlane],
 });
+const configurationWorker = talos.machine.getConfigurationOutput({
+    clusterName: clusterName,
+    machineType: "worker",
+    clusterEndpoint: "https://cluster.local:6443",
+    machineSecrets: secrets.machineSecrets,
+},{dependsOn: [secrets]});
 // Apply configuration to workerNodes
 for (let i = 0; i < workerNodes.length; i++) {
     const workerNodeIp = workerNodes[i].ipv4Address;
     new talos.machine.ConfigurationApply(`configurationApplyWorker-${i}`, {
         clientConfiguration: secrets.clientConfiguration,
-        machineConfigurationInput: configuration.machineConfiguration,
+        machineConfigurationInput: configurationWorker.machineConfiguration,
         node: workerNodeIp,
         configPatches: [JSON.stringify({
             machine: {
