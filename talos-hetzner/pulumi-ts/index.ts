@@ -1,29 +1,36 @@
 import * as talos from "@pulumiverse/talos";
 import * as hcloud from "@pulumi/hcloud";
 // configuration variables
-const server_image = "224159775"
-const clusterName = "exampleCluster"
+const CLUSTER_NAME = "exampleCluster"
 const numberOfWorkerNodes = 2
 let workerNodes: hcloud.Server[] = [];
 // Server controlplane
-const controlPlane = new hcloud.Server(`controlplane`, {
-    name: `controlplane`,
-    image: server_image,
-    location: "ash",
-    serverType: "cpx21",
+const CONTROL_PLANE_NODE_NAME = "controlplane";
+const CONTROL_PLANE_SERVER_TYPE = "cpx21";
+const HETZNER_LOCATION = "ash";
+const serverImage = hcloud.getImage({
+    withSelector: "os=talos",
+    withArchitecture: "x86",
+});
+const controlPlane = new hcloud.Server(CONTROL_PLANE_NODE_NAME, {
+    name: CONTROL_PLANE_NODE_NAME,
+    image: serverImage.then(image => image.id.toString()),
+    location: HETZNER_LOCATION,
+    serverType: CONTROL_PLANE_SERVER_TYPE,
     publicNets: [{
         ipv4Enabled: true,
         ipv6Enabled: true,
     }],
-})
+});
+
 // Server workers
 for (let i = 0; i < numberOfWorkerNodes; i++) {
     let name = `worker-${i}`;
     const node = new hcloud.Server(name, {
         name: name,
-        image: server_image,
-        location: "ash",
-        serverType: "cpx21",
+        image: serverImage.then(image => image.id.toString()),
+        location: HETZNER_LOCATION,
+        serverType: CONTROL_PLANE_SERVER_TYPE,
         publicNets: [{
             ipv4Enabled: true,
             ipv6Enabled: true,
@@ -38,7 +45,7 @@ const controlPlaneIp = controlPlane.ipv4Address
 const secrets = new talos.machine.Secrets("secrets", {},{dependsOn: [controlPlane]});
 // Configuration definition
 const configuration = talos.machine.getConfigurationOutput({
-    clusterName: clusterName,
+    clusterName: CLUSTER_NAME,
     machineType: "controlplane",
     clusterEndpoint: "https://cluster.local:6443",
     machineSecrets: secrets.machineSecrets,
@@ -64,7 +71,7 @@ const bootstrap = new talos.machine.Bootstrap("bootstrap", {
     dependsOn: [configApplyControlPlane],
 });
 const configurationWorker = talos.machine.getConfigurationOutput({
-    clusterName: clusterName,
+    clusterName: CLUSTER_NAME,
     machineType: "worker",
     clusterEndpoint: "https://cluster.local:6443",
     machineSecrets: secrets.machineSecrets,
@@ -96,5 +103,5 @@ const kubeConfig = new talos.cluster.Kubeconfig("kubeconfig", {
         clientKey: secrets.clientConfiguration.clientKey,
     }
 })
-// Stack output defintion
+// Stack output definition
 export const kubeconfig = kubeConfig.kubeconfigRaw;
