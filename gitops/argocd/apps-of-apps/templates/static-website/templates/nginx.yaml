@@ -57,7 +57,7 @@ data:
       <div class="container">
         <h1>Hello from Nginx!</h1>
         <p>This is a static HTML page served by Nginx inside a Kubernetes pod.</p>
-        <p>The name of the app is: {{.Release.Name}}</p>
+        <p>The name of the app is: {{.Values.name}}</p>
         <div class="footer">
           Page loaded on: <span id="loadTime"></span>
         </div>
