@@ -19,6 +19,6 @@ Existe otra manera de usar Argocd-autopilot y es con la imagen de Docker.
 docker run \
   -v ~/.kube:/home/autopilot/.kube \
   -v ~/.gitconfig:/home/autopilot/.gitconfig \
-  -env-file ./.env \ 
+  --env-file ./.env \ 
   -it quay.io/argoprojlabs/argocd-autopilot argocd-autopilot repo bootstrap
 ```
