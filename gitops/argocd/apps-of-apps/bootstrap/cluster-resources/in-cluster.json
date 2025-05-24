@@ -1,3 +1,3 @@
 [
-  {"name":"frontend","server":"https://kubernetes.default.svc"}
+  {"name":"in-cluster","server":"https://kubernetes.default.svc"}
 ]

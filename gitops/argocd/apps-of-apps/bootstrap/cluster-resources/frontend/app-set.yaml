@@ -24,9 +24,10 @@ spec:
     spec:
       destination:
         server: "https://kubernetes.default.svc"
+        namespace: frontend
       project: default
       source:
-        path: gitops/argocd/apps-of-apps/templates
+        path: gitops/argocd/apps-of-apps/templates/static-website
         repoURL: https://github.com/juanfbl9307/shared-content.git
         helm:
           values: |
@@ -35,3 +36,5 @@ spec:
         automated:
           allowEmpty: true
           selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
