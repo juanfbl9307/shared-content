@@ -14,7 +14,7 @@ pulumi config set hcloud:token <TOKEN> --secret
 
 ## Obtener kubeconfig
 ```bash
-pulumi stack outputs kubeconfig --show-secrets > kubeconfig
+pulumi stack output kubeconfig --show-secrets > kubeconfig
 ```
 
 ## Conectarse al cluster

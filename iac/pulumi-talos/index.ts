@@ -1,8 +1,8 @@
 import * as talos from "@pulumiverse/talos";
 import * as hcloud from "@pulumi/hcloud";
 // configuration variables
-const CLUSTER_NAME = "exampleCluster"
-const numberOfWorkerNodes = 3
+const CLUSTER_NAME = "appsOfApps"
+const numberOfWorkerNodes = 2
 let workerNodes: hcloud.Server[] = [];
 const CONTROL_PLANE_SERVER_TYPE = "cpx21";
 const WORKER_SERVER_TYPE = "cpx21";
