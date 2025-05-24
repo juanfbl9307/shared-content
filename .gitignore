@@ -1,3 +1,4 @@
 .idea
 Pulumi.dev.yaml
 kubeconfig
+.env
