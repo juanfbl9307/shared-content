@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # Server service to run the Node.js application
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: pulumi-server
+    environment:
+      - PULUMI_CONFIG_PASSPHRASE=
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/pulumi/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
